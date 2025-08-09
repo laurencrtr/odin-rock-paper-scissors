@@ -1,5 +1,3 @@
-
-
 function getComputerChoice() {
     let randomNum = Math.random()
     let computerChoice = "scissors"
@@ -65,31 +63,34 @@ function playRound(humanChoice, computerChoice) {
 }
 
 function playGame() {
-    let round = 0
     let humanScore = 0
     let computerScore = 0
 
-    console.log("Round " + round +":")
-
-    let computerChoice = getComputerChoice()
-    let humanChoice = getHumanChoice()
-
-
-    let winner = playRound(humanChoice, computerChoice)
     
-    if (winner === "human") {
-        ++humanScore;
-    } else if (winner === "computer") {
-        ++computerScore;
+    for (let round = 1; round < 6; round++) {
+        console.log("Round " + round +":")
+
+        let computerChoice = getComputerChoice()
+        let humanChoice = getHumanChoice()
+        let winner = playRound(humanChoice, computerChoice)
+        
+        if (winner === "human") {
+            ++humanScore;
+        } else if (winner === "computer") {
+            ++computerScore;
+        }
+
+        console.log("Score: Human: " + humanScore + ", Computer: " + computerScore)
+    }
+    
+    let winnerAnnouncement = "It is a tie!"
+    if (humanScore > computerScore) {
+        winnerAnnouncement = "You won the game!"
+    } else if (computerScore > humanScore) {
+        winnerAnnouncement = "The computer won the game."
     }
 
-    console.log(humanChoice)
-    console.log(computerChoice)
-    console.log(humanScore)
-    console.log(computerScore)
-    console.log("Score: Human: " + humanScore + " Computer: " + computerScore)
-
+    console.log(winnerAnnouncement)
 }
-
 
 playGame()
