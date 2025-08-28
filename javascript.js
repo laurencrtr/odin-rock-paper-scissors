@@ -11,76 +11,39 @@ function getComputerChoice() {
     return computerChoice;
 }
 
-// function getHumanChoice() {
-    // let humanChoice = prompt("Enter rock, paper, or scissors: ")
-    // humanChoice = humanChoice.toLowerCase();
-    // let humanChoice = undefined
-
-    // let rBtn = document.querySelector('#rBtn');
-    // rBtn.addEventListener('click', (event) => {
-    //     console.log("You chose rock");
-    //     humanChoice = 'rock'
-    // });
-    
-    // let pBtn = document.querySelector('#pBtn');
-    // pBtn.addEventListener('click', (event) => {
-    //     console.log("You chose paper.");
-    //     humanChoice = 'paper'
-    // });
-    
-    // let sBtn = document.querySelector('#sBtn');
-    // sBtn.addEventListener('click', (event) => {
-    //     console.log("You chose scissors");
-    //     humanChoice = 'scissors'
-    // });
-
-    // return humanChoice
-// }
-
 function playRound(humanChoice, computerChoice) {
-    // console.log("You chose " + humanChoice)
-    // console.log("The computer chose " + computerChoice)
+
     let winner = "tie"
 
     if (humanChoice === "rock") {
         if (computerChoice === "rock") {
-            message = "It is a tie! No one gets a point this round."
+            winner = "tie"
         } else if (computerChoice === "paper") {
-            message = "The computer wins this round."
             winner = "computer"
         } else {
-            message = "You win this round!"
             winner = "human"
         }
     }
 
     if (humanChoice === "paper") {
         if (computerChoice === "paper") {
-            message = "It is a tie! No one gets a point this round."
+            winner = "tie"
         } else if (computerChoice === "scissors") {
-            message = "The computer wins this round."
             winner = "computer"
         } else {
-            message = "You win this round!"
             winner = "human"
         }
     }
 
     if (humanChoice === "scissors") {
         if (computerChoice === "scissors") {
-            message = "It is a tie! No one gets a point this round."
+            winner = "tie"
         } else if (computerChoice === "rock") {
-            message = "The computer wins this round."
             winner = "computer"
         } else {
-            message = "You win this round!"
             winner = "human"
         }
     }
-
-    playRoundMessage = document.createElement("p");
-    playRoundMessage.textContent = message;
-    container.appendChild(playRoundMessage);
 
     return winner;
 
@@ -96,24 +59,22 @@ function somebodyWon(humanScore, computerScore) {
         let winnerMessage = document.createElement("h1");
         winnerMessage.textContent = winnerAnnouncement;
         container.appendChild(winnerMessage);
-        console.log(winnerAnnouncement)
+        totalsContainer.appendChild(winnerMessage);
+
+        document.getElementById("rBtn").style.visibility = "hidden";
+        document.getElementById("pBtn").style.visibility = "hidden";
+        document.getElementById("sBtn").style.visibility = "hidden";
+
+        let newGamePrompt = document.createElement("h2");
+        newGamePrompt.textContent = "If you would like to play again, you can refresh the page. (Score and history information will be deleted.)"
+        totalsContainer.appendChild(newGamePrompt)
 }
 
 function playGame() {
 
     if (humanScore < 5 && computerScore < 5) {
-        let roundMessage = document.createElement("h1");
-        roundMessage.textContent = "Round " + round +":";
-        container.appendChild(roundMessage)
         
-        let humanMessage = document.createElement("p");
-        humanMessage.textContent = "You chose " + humanChoice; 
-        container.appendChild(humanMessage)
-
         let computerChoice = getComputerChoice();
-        let computerMessage = document.createElement("p");
-        computerMessage.textContent = "The computer chose " + computerChoice;
-        container.appendChild(computerMessage);
 
         let winner = playRound(humanChoice, computerChoice)
 
@@ -121,13 +82,34 @@ function playGame() {
 
         if (winner === "human") {
             ++humanScore;
+            message = "You win this round!"
         } else if (winner === "computer") {
             ++computerScore;
+            message = "The computer wins this round."
+        } else if (winner === "tie") {
+            message = "It is a tie! No one gets a point this round."
         }
 
-        let roundScoreMessage = document.createElement("p");
+        if (round === 1) {
+            let historyMessage = document.createElement("p");
+            historyMessage.textContent = "History: ";
+            container.appendChild(historyMessage);
+        }
+
+        let roundEndMessage = document.createElement("p");
+        roundEndMessage.textContent = "Round " + round + 
+            ": You chose " + humanChoice
+             + ". The computer chose " + computerChoice + ". " + message
+             + " (Score: " + humanScore + "/" + computerScore + ")";
+        container.appendChild(roundEndMessage);
+
+        
+        while (totalsContainer.hasChildNodes()) {
+            totalsContainer.removeChild(totalsContainer.firstChild);
+        }
+        let roundScoreMessage = document.createElement("h1");
         roundScoreMessage.textContent = "Score: Human: " + humanScore + ", Computer: " + computerScore;
-        container.appendChild(roundScoreMessage)
+        totalsContainer.appendChild(roundScoreMessage)
 
         } else {
         somebodyWon(humanScore, computerScore)
@@ -137,15 +119,16 @@ function playGame() {
         somebodyWon(humanScore, computerScore)
     }
 
+
 }
 
-// playGame()
 let humanScore = 0
 let computerScore = 0
-let round = 1
+let round = 0
 const container = document.querySelector("#container");
-let winnerAnnouncement = undefined
+const totalsContainer = document.querySelector("#totalsContainer");
 
+let winnerAnnouncement = undefined
 
 
 let rBtn = document.querySelector('#rBtn');
@@ -165,3 +148,4 @@ sBtn.addEventListener('click', (event) => {
     humanChoice = 'scissors'
     playGame()
 });
+
